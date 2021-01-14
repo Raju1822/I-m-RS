@@ -265,7 +265,7 @@ var stylesheet = document.getElementById("1");
               <h2 class="s-title">Web Design</h2>
               <p class="s-description text-center">
                 I have 3+ years of experience in
-                web designing. I worked on the appearance, layout, and, in some cases, content of a website.
+                web designig. I worked on the appearance, layout, and, in some cases, content of a website.
               </p>
             </div>
           </div>
@@ -742,39 +742,41 @@ var stylesheet = document.getElementById("1");
                   <div class="title-box-2">
                     <h5 class="title-left">
                       Send Message Me
-                    </h5>
+                    </h5>  
+                    <br>
+                    <h4 style=" color:rgb(0, 0, 0);font-size:15px;"class="sent-notification "></h4> 
                   </div>
                   <div>
-                      <form action="" method="post" role="form" class="contactForm">
-                      <div id="sendmessage">Your message has been sent. Thank you!</div>
+                      <form id="myForm" action="" method="post" role="form" class="contactForm">
+                      <div id="sendmessage"></div>
                       <div id="errormessage"></div>
                       <div class="row">
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required />
                             <div class="validation"></div>
                           </div>
                         </div>
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" required />
                             <div class="validation"></div>
                           </div>
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
-                              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                              <input  type="text"  class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" required />
                               <div class="validation"></div>
                             </div>
                         </div>
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+                            <textarea id="body" class="form-control" name="message" rows="5" data-rule="required" required data-msg="Please write something for us" placeholder="Message"></textarea>
                             <div class="validation"></div>
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit" class="button button-a button-big button-rouded">Send Message</button>
+                          <button type="submit" onclick="sendEmail()" value="Send An Email" class="button button-a button-big button-rouded">Send Message</button>
                         </div>
                       </div>
                     </form>
@@ -870,6 +872,46 @@ new WOW().init();
 
   <!-- Template Main Javascript File -->
   <script src="js/main.js"></script>
+
+  <!--================PHPmailer================-->
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+        function sendEmail() {
+            var name = $("#name");
+            var email = $("#email");
+            var subject = $("#subject");
+            var body = $("#body");
+
+            if (isNotEmpty(name) && isNotEmpty(email) && isNotEmpty(subject) && isNotEmpty(body)) {
+                $.ajax({
+                   url: 'sendEmail.php',
+                   method: 'POST',
+                   dataType: 'json',
+                   data: {
+                       name: name.val(),
+                       email: email.val(),
+                       subject: subject.val(),
+                       body: body.val()
+                   }, success: function (response) {
+                        $('#myForm')[0].reset();
+                        $('.sent-notification').text("Message Sent Successfully.");
+                   }
+                });
+            }
+        }
+
+        function isNotEmpty(caller) {
+            if (caller.val() == "") {
+                caller.css('border', '1px solid red');
+                return false;
+            } else
+                caller.css('border', '');
+
+            return true;
+        }
+    </script>
+
+  <!---PHP mailer end-->
 
 </body>
 </html>
